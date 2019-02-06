@@ -30,3 +30,20 @@
     transform: rotate(360deg);
   }
 }
+
+.movies {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.movie {
+  display: flex;
+  text-align: start;
+  flex-direction: row;
+  margin: 5px;
+}
+
+.movie-overview {
+  margin: 5px;
+}

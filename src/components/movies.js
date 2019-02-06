@@ -10,9 +10,21 @@ class Movies extends Component {
     console.log(this.props.movObj);
     console.log(this.props.movies);
     const movie = this.props.movies.map(movie => (
-      <div key={movie.id}>{movie.title}</div>
+      <div key={movie.id} className="movie">
+        <div>
+          <img src={"http://image.tmdb.org/t/p/w185/" + movie.poster_path} />
+        </div>
+        <div className="movie-overview">
+          <div>
+            <b>{movie.title}</b>
+          </div>
+          <hr />
+          <div>{movie.release_date}</div>
+          <div>{movie.overview}</div>
+        </div>
+      </div>
     ));
-    return <div>{movie}</div>;
+    return <div className="movies">{movie}</div>;
   }
 }
 
