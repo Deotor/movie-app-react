@@ -1,29 +1,27 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { fetchMovies } from "../actions/moviesActions";
 
-export default class Movies extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      response: {},
-      movies: []
-    };
-  }
+class Movies extends Component {
   componentDidMount() {
-    fetch(
-      "https://api.themoviedb.org/3/movie/popular?api_key=52b79f7149942ffa860e6c6dfa4522ad&language=en-US&page=1"
-    )
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ movies: data.results, response: data });
-      });
+    this.props.fetchMovies();
   }
-
   render() {
-    console.log(this.state.response);
-    console.log(this.state.movies);
-    const movie = this.state.movies.map(movie => (
+    console.log(this.props.movObj);
+    console.log(this.props.movies);
+    const movie = this.props.movies.map(movie => (
       <div key={movie.id}>{movie.title}</div>
     ));
     return <div>{movie}</div>;
   }
 }
+
+const mapStateToProps = state => ({
+  movies: state.movies.movies,
+  movObj: state.movObj.movObj
+});
+
+export default connect(
+  mapStateToProps,
+  { fetchMovies }
+)(Movies);
