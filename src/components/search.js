@@ -1,53 +1,55 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import {
+  searchMovie,
+  fetchMovies,
+  changeSearched
+} from "../actions/moviesActions";
 
-export default class Search extends Component {
+class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchedTitle: ""
+      searched: ""
     };
   }
 
   onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      if (this.state.searched) {
+        this.props.searchMovie(this.state.searched);
+        this.props.changeSearched(this.state.searched);
+      } else {
+        this.props.fetchMovies(this.props.filter);
+        this.props.changeSearched(this.state.searched);
+      }
+    });
   };
 
-  onClick = e => {
-    if (this.state.searchedTitle) {
-      fetch(
-        "https://api.themoviedb.org/3/search/multi?api_key=52b79f7149942ffa860e6c6dfa4522ad&language=en-US&query=" +
-          this.state.searchedTitle +
-          "&page=1&include_adult=true"
-      )
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-        });
-    }
-  };
   render() {
     return (
-      <form className="form-inline my-2 my-lg-0">
-        <div className="input-group">
-          <input
-            name="searchedTitle"
-            type="text"
-            className="form-control"
-            placeholder="Search"
-            value={this.state.searchedTitle}
-            onChange={this.onChange}
-          />
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
-              onClick={this.onClick}
-            >
-              Search
-            </button>
-          </div>
-        </div>
-      </form>
+      <div className="nav-search">
+        <input
+          name="searched"
+          type="text"
+          className="form-control"
+          placeholder="Search"
+          value={this.state.searchedTitle}
+          onChange={this.onChange}
+        />
+      </div>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  movies: state.movies.movies,
+  page: state.movies.page,
+  totalPages: state.movies.totalPages,
+  filter: state.movies.filter
+});
+
+export default connect(
+  mapStateToProps,
+  { searchMovie, fetchMovies, changeSearched }
+)(Search);
